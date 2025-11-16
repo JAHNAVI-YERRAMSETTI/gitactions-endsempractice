@@ -1,7 +1,7 @@
 services:
   mysqldb:
     image: mysql:8
-    container_name: mysqlpract
+    container_name: mysqldbexam
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: projectdb
@@ -13,10 +13,10 @@ services:
       - springboot-mysql-net
 
   backend:
-    image: jahnavi829/gitactionsbackendpract:latest
-    container_name: springbootpract
+    image: jahnavi829/practicegitactionsbackend:latest
+    container_name: springbootexam
     ports:
-      - "2019:1993"
+      - "2011:1993"
     depends_on:
       - mysqldb
     restart: on-failure
@@ -24,10 +24,10 @@ services:
       - springboot-mysql-net
 
   frontend:
-    image: jahnavi829/gitactionsfrontendpract:latest
-    container_name: reactpract
+    image: jahnavi829/practicegitactionsfrontend:latest
+    container_name: reactexam
     ports:
-      - "3003:80"
+      - "3004:80"
     depends_on:
       - backend
     restart: on-failure
