@@ -1,52 +1,41 @@
 services:
   mysqldb:
-    container_name: mysql-db
     image: mysql:8
+    container_name: mysqlpract
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: projectdb
     ports:
       - "3307:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     networks:
-      - taskmanager-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+      - springboot-mysql-net
 
   backend:
-    container_name: taskmanager-backend
-    build:
-      context: ./springbootbackend
-      dockerfile: ../FULLSTACK/backend.Dockerfile
+    image: jahnavi829/gitactionsbackendpract:latest
+    container_name: springbootpract
     ports:
-      - "2029:2000"
+      - "2019:1993"
     depends_on:
-      mysqldb:
-        condition: service_healthy
+      - mysqldb
     restart: on-failure
     networks:
-      - taskmanager-network
+      - springboot-mysql-net
 
   frontend:
-    container_name: taskmanager-frontend
-    build:
-      context: ./reactfrontend
-      dockerfile: ../FULLSTACK/frontend.Dockerfile
+    image: jahnavi829/gitactionsfrontendpract:latest
+    container_name: reactpract
     ports:
-      - "2097:80"
+      - "3003:80"
     depends_on:
       - backend
+    restart: on-failure
     networks:
-      - taskmanager-network
+      - springboot-mysql-net
 
 volumes:
-  mysql-data:
+  mysql_data:
 
 networks:
-  taskmanager-network:
-    driver: bridge
+  springboot-mysql-net:
